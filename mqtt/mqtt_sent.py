@@ -5,20 +5,28 @@ import time
 
 #def on_connect(client, userdata, flags, rc):
     #print("Connected with result code: " + str(rc))
-
+to_server_count = 12
+person_in_time = 600
 in_timer = 0
 loop_timer = 0
+avg_count = 0
 N1_result = ""
 N2_result = ""
 N3_result = ""
 N4_result = ""
+All_result = "00000000000000000000000000000000"
+
+def string_or(s1,s2):    
+    return ''.join(chr(ord(a) ^ ord(b)) for a,b in zip(s1,s2))
+
 def on_message(client, userdata, msg):
-    global in_timer, N1_result, N2_result, N3_result, N4_result
+    global in_timer, avg_count, N1_result, N2_result, N3_result, N4_result
     
     #print(msg.topic + "," + str(msg.payload))
-    if msg.payload.decode() == 'person_in':
+    if msg.payload.decode() == 'key_in':
         #print(msg.topic + "," + msg.payload.decode())
         in_timer = time.time()
+        avg_count = 0
     elif msg.topic == 'callback_N1':
         N1_result = msg.payload.decode()
     elif msg.topic == 'callback_N2':
@@ -45,8 +53,8 @@ def on_message(client, userdata, msg):
 #   发布消息回调
 
 def on_publish(client, userdata, mid):
-    print("发布消息")
-    print("On onPublish: qos = %d" % mid)
+    #print("发布消息")
+    #print("On onPublish: qos = %d" % mid)
     pass
 
 
@@ -76,25 +84,32 @@ client.subscribe('callback_N3',qos=0)  #N3 rasberry pi
 client.subscribe('callback_N4',qos=0)  #N4 rasberry pi
 
 client.loop_start()  ## open another workflow
+#client.loop_forever()
 
 while True:
     if in_timer != 0:
-        time.sleep(5)
-        client.publish(topic='mqtt_test',payload='take_picture',qos=0,retain=False)
+        client.publish(topic='take_picture', payload='take_picture', qos=0, retain=False)
         time.sleep(5)
         if N1_result != "" and N2_result != "" and N3_result != "" and N4_result != "":
+            avg_count = avg_count + 1
             N1_split = N1_result.split(" ")
             N2_split = N2_result.split(" ")
             N3_split = N3_result.split(" ")
             N4_split = N4_result.split(" ")
+            All_result_old = All_result
             All_result = N1_split[0] + N1_split[1] + N1_split[2] + N1_split[3] + N2_result[0] + N2_result[1] + N2_result[2] + N3_split[0] + N3_split[1] + N3_split[2] + N3_split[3] + N4_split[0] + N4_split[1] + N4_split[2] + N1_split[4] + N1_split[5] + N1_split[6] + N1_split[7] + N1_result[8] + N2_split[3] + N2_split[4] + N2_split[5] + N2_split[6] + N2_result[7] +  N3_split[4] + N3_split[5] + N3_split[6] + N3_split[7] + N4_split[3] + N4_split[4] + N4_split[5] + N4_split[6]
-            client.publish(topic='grid_status',payload=All_result,qos=0,retain=False)
+            All_result = string_or(All_result_old, All_result)
+            if avg_count == to_server_count:
+                client.publish(topic='grid_status', payload=All_result, qos=0, retain=False)
         loop_timer = time.time()
-        if loop_timer - in_timer < 600:
-            pass
+        if loop_timer - in_timer < person_in_time:
+            N1_result = ""
+            N2_result = ""
+            N3_result = ""
+            N4_result = ""
         else:
+            All_result = "00000000000000000000000000000000"
             in_timer = 0
-#client.loop_forever()
 
 
 
