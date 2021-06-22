@@ -51,14 +51,12 @@ def on_message(client, userdata, msg):
     grid_12 = "0"
     grid_13 = "0"
     grid_14 = "0"
-    count = 0
     print(msg.topic + " " + str(msg.payload))
     if msg.payload.decode()== 'take_picture':
         cap = cv2.VideoCapture(0)
+        time.sleep(0.1)
         ret, frame = cap.read()
         cap.release()
-        #print(frame.shape)
-        #cv2.imshow("frame", frame)
         
         classes, confidences, boxes = net.detect(frame, confThreshold=0.1, nmsThreshold=0.5)
         if len(boxes) > 0:
@@ -97,31 +95,17 @@ def on_message(client, userdata, msg):
                 # 在影像中標出Box邊界和類別、信心度
                 cv2.rectangle(frame, boundingBox[0], boundingBox[2], rectColor, 2)
                 cv2.putText(frame, pstring, textCoord, cv2.FONT_HERSHEY_DUPLEX, 1, rectColor, 2)
-        result = "43:" + grid_43 + " " + "44:" + grid_44 + " " + "45:" + grid_45 + " " + "46:" + grid_46 + " " + "47:" + grid_47 + " " + "48:" + grid_48 + " " + "12:" + grid_12 + " " + "13:" + grid_13 + " " + "14:" + grid_14
+        result = grid_43 + " " + grid_44 + " " + grid_45 + " " + grid_46 + " " + grid_47 + " " + grid_48 + " " + grid_12 + " " + grid_13 + " " + grid_14
         print(result)
         
         cv2.imwrite("test.jpg", frame)
-        #main(client)
         #time.sleep(3)
         
         count = count + 1
         client.publish("callback_N1",result,0)
-        #print(client.publish("callback","MQTT",0))
         print("Waiting 1 seconds")
         #time.sleep(1)
         #client.publish()
-
-def main(client):
-    #print("Started Spinning")
-    running = True
-    #start()
-    #print(client.publish("scanner","shoot",0))
-    print("Waiting 2 seconds")
-    time.sleep(2)
-    #print("ending spinning")
-    #end()
-    #print("finished spinning")
-    #running = False 
 
 
 '''
@@ -155,8 +139,7 @@ client = mqtt.Client()
 client.on_message = on_message
 
 client.connect(HOST, PORT, 600)
-client.subscribe('mqtt_test',qos=0)
-client.subscribe('mqtt_test1',qos=0)
+client.subscribe('take_picture',qos=0)
 client.loop_forever()
 
 
