@@ -81,7 +81,7 @@ def on_message(client, userdata, msg):
                     grid_13 = grid_exist_down(box, grid_y = 705, road_y = 750, grid_x_left = 438, grid_x_right = 656)
                 if grid_14 == "0":
                     grid_14 = grid_exist_down(box, grid_y = 705, road_y = 750, grid_x_left = 657, grid_x_right = 828)
-                
+                '''
                 pstring = str(int(100 * confidence)) + "%" #信心度
                 x_left, y_top, width, height = box
                 boundingBox = [
@@ -95,10 +95,11 @@ def on_message(client, userdata, msg):
                 # 在影像中標出Box邊界和類別、信心度
                 cv2.rectangle(frame, boundingBox[0], boundingBox[2], rectColor, 2)
                 cv2.putText(frame, pstring, textCoord, cv2.FONT_HERSHEY_DUPLEX, 1, rectColor, 2)
+                '''
         result = grid_43 + " " + grid_44 + " " + grid_45 + " " + grid_46 + " " + grid_47 + " " + grid_48 + " " + grid_12 + " " + grid_13 + " " + grid_14
         print(result)
         
-        cv2.imwrite("test.jpg", frame)
+        #cv2.imwrite("test.jpg", frame)
         #time.sleep(3)
         
         count = count + 1
