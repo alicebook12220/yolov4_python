@@ -102,7 +102,6 @@ def on_message(client, userdata, msg):
         #cv2.imwrite("test.jpg", frame)
         #time.sleep(3)
         
-        count = count + 1
         client.publish("callback_N1",result,0)
         print("Waiting 1 seconds")
         #time.sleep(1)
@@ -140,7 +139,7 @@ client = mqtt.Client()
 client.on_message = on_message
 
 client.connect(HOST, PORT, 600)
-client.subscribe('take_picture',qos=0)
+client.subscribe('take_picture', qos=0)
 client.loop_forever()
 
 
