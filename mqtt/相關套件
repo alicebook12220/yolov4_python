@@ -1,0 +1,26 @@
+MJPG:
+sudo apt-get update
+sudo apt-get install libjpeg8-dev  #JPEG支持库
+sudo apt-get install imagemagick
+sudo apt-get install libv4l-dev   
+sudo apt-get install cmake  #下载编译工具
+sudo apt-get install git #用git下载软件
+sudo apt-get install unzip #解压缩的软件
+wget https://github.com/alicebook12220/mjpg-streamer/archive/master.zip
+unzip master.zip
+
+pi@raspberrypi:~ $ cd mjp*g-*
+pi@raspberrypi:~/mjpg-streamer-master $ cd mjpg-*
+pi@raspberrypi:~/mjpg-streamer-master/mjpg-streamer-experimental $ make
+pi@raspberrypi:~/mjpg-streamer-master/mjpg-streamer-experimentalsudo $ make install 
+pi@raspberrypi:~/mjpg-streamer-master/mjpg-streamer-experimental $ cd $home
+pi@raspberrypi:~ $ 
+
+controb -e
+/usr/local/bin/mjpg_streamer -i "/usr/local/lib/mjpg-streamer/input_uvc.so -n -f 30 -r 640x480" -o "/usr/local/lib/mjpg-streamer/output_http.so -p 7588 -w /usr/local/share/mjpg-streamer/www"
+
+http://192.168.31.136:8080/?action=stream
+
+MQTT:
+pip3 install paho-mqtt
+
