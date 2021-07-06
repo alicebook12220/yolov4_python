@@ -16,8 +16,8 @@ pi@raspberrypi:~/mjpg-streamer-master/mjpg-streamer-experimentalsudo $ make inst
 pi@raspberrypi:~/mjpg-streamer-master/mjpg-streamer-experimental $ cd $home
 pi@raspberrypi:~ $ 
 
-controb -e
-/usr/local/bin/mjpg_streamer -i "/usr/local/lib/mjpg-streamer/input_uvc.so -n -f 30 -r 640x480" -o "/usr/local/lib/mjpg-streamer/output_http.so -p 7588 -w /usr/local/share/mjpg-streamer/www"
+crontab -e
+@reboot /usr/local/bin/mjpg_streamer -i "/usr/local/lib/mjpg-streamer/input_uvc.so -n -f 30 -r 640x480" -o "/usr/local/lib/mjpg-streamer/output_http.so -p 7588 -w /usr/local/share/mjpg-streamer/www"
 
 http://192.168.31.136:8080/?action=stream
 
